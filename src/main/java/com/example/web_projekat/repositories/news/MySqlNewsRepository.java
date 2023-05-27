@@ -12,7 +12,7 @@ import java.util.List;
 
 public class MySqlNewsRepository extends MySqlAbstractRepository implements NewsRepository {
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy H:mm:ss");
 
     @Override
     public News createNews(int userId, NewsDto newsDto) {

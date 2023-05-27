@@ -13,7 +13,7 @@ import java.util.List;
 
 public class MySqlCommentRepository extends MySqlAbstractRepository implements CommentRepository {
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy H:mm:ss");
 
 
     @Override
