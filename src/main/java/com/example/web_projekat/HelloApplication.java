@@ -65,6 +65,7 @@ public class HelloApplication extends ResourceConfig {
             }
         };
         register(binder);
+        register(CORSFilter.class);
 
         // Ucitavamo resurse
         packages("com.example.web_projekat");
