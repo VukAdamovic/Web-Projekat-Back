@@ -31,9 +31,10 @@ public class NewsResource {
     }
 
     @GET
+    @Path("/page/{numberPage}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findAllNews() {
-        return Response.ok(newsService.getAllNews()).build();
+    public Response findAllNews(@PathParam("numberPage") int page) {
+        return Response.ok(newsService.getAllNews(page)).build();
     }
 
     @PUT

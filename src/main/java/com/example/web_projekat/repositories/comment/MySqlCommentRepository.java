@@ -58,20 +58,31 @@ public class MySqlCommentRepository extends MySqlAbstractRepository implements C
     }
 
     @Override
-    public List<Comment> getAllComments() {
+    public List<Comment> getAllComments(int page) {
         List<Comment> allComments = new ArrayList<>();
 
         Connection connection = null;
-        Statement statement = null;
+        PreparedStatement statement = null;
         ResultSet resultSet = null;
+
+        int itemsPerPage = 10;
+        int startIndex = (page - 1) * itemsPerPage;
 
         try {
             connection = this.newConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery("select * from comments");
+            statement = connection.prepareStatement("SELECT * FROM comments LIMIT ?, ?");
+            statement.setInt(1, startIndex);
+            statement.setInt(2, itemsPerPage);
+            resultSet = statement.executeQuery();
 
             while (resultSet.next()){
                 allComments.add(new Comment(resultSet.getInt("id"), resultSet.getString("name"),resultSet.getString("content"), resultSet.getString("createdAt"), resultSet.getInt("newsId")));
+            }
+
+            // Provera da li postoji sledeći page
+            if (allComments.isEmpty() && page > 1) {
+                int previousPage = page - 1;
+                return getAllComments(previousPage);
             }
 
         } catch (SQLException e) {

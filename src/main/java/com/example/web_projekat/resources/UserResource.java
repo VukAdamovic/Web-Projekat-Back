@@ -50,9 +50,10 @@ public class UserResource {
     }
 
     @GET
+    @Path("/page/{numberPage}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findAllUsers() {
-        return Response.ok(userService.getAllUser()).build();
+    public Response findAllUsers(@PathParam("numberPage") int page) {
+        return Response.ok(userService.getAllUser(page)).build();
     }
 
     @PUT

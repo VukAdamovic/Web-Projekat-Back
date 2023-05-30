@@ -30,16 +30,17 @@ public class CategoryResource {
     }
 
     @GET
-    @Path("/news/{id}")
+    @Path("/news/{id}/{numberPage}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findAllNewsById(@PathParam("id") int id) {
-        return Response.ok(categoryService.getNewsByCategoryId(id)).build();
+    public Response findAllNewsById(@PathParam("id") int id, @PathParam("numberPage") int page) {
+        return Response.ok(categoryService.getNewsByCategoryId(id, page)).build();
     }
 
     @GET
+    @Path("/page/{numberPage}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findAllCategories() {
-        return Response.ok(categoryService.getAllCategory()).build();
+    public Response findAllCategories(@PathParam("numberPage") int page) {
+        return Response.ok(categoryService.getAllCategory(page)).build();
     }
 
     @PUT

@@ -10,12 +10,12 @@ public interface CategoryRepository {
 
     Category createCategory(CategoryDto categoryDto);
 
-    List<Category> getAllCategory();
+    List<Category> getAllCategory(int page);
 
     Category findCategoryById(int id);
 
 
-    List<News> getNewsByCategoryId(int id);
+    List<News> getNewsByCategoryId(int id, int page);
 
     Category updateCategory(int id, CategoryDto categoryDto);
 

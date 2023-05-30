@@ -58,20 +58,32 @@ public class MySqlUserRepository extends MySqlAbstractRepository implements User
     }
 
     @Override
-    public List<User> getAllUser() {
+    public List<User> getAllUser(int page) {
         List<User> allUsers = new ArrayList<>();
 
         Connection connection = null;
-        Statement statement = null;
+        PreparedStatement statement = null;
         ResultSet resultSet = null;
+
+        int itemsPerPage = 10;
+        int startIndex = (page - 1) * itemsPerPage;
 
         try {
             connection = this.newConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery("select * from raf_users");
+            statement = connection.prepareStatement("SELECT * FROM raf_users LIMIT ?, ?");
+            statement.setInt(1, startIndex);
+            statement.setInt(2, itemsPerPage);
+            resultSet = statement.executeQuery();
+
 
             while (resultSet.next()){
                 allUsers.add(new User(resultSet.getInt("id"), resultSet.getString("email"), resultSet.getString("firstName"), resultSet.getString("lastName"), resultSet.getInt("roleId"), resultSet.getBoolean("status"), resultSet.getString("hashedPassword")));
+            }
+
+            // Provera da li postoji sledeći page
+            if (allUsers.isEmpty() && page > 1) {
+                int previousPage = page - 1;
+                return getAllUser(previousPage);
             }
 
         } catch (SQLException e) {

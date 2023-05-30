@@ -58,21 +58,33 @@ public class MySqlNewsRepository extends MySqlAbstractRepository implements News
     }
 
     @Override
-    public List<News> getAllNews() {
+    public List<News> getAllNews(int page) {
         List<News> allNews = new ArrayList<>();
 
         Connection connection = null;
-        Statement statement = null;
+        PreparedStatement statement = null;
         ResultSet resultSet = null;
+
+        int itemsPerPage = 10;
+        int startIndex = (page - 1) * itemsPerPage;
 
         try {
             connection = this.newConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery("select * from news");
+            statement = connection.prepareStatement("SELECT * FROM news LIMIT ?, ?");
+            statement.setInt(1, startIndex);
+            statement.setInt(2, itemsPerPage);
+            resultSet = statement.executeQuery();
 
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 allNews.add(new News(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getString("content"),
-                        resultSet.getString("createdAt"), resultSet.getInt("visitNumber"), resultSet.getInt("categoryId"), resultSet.getInt("userId")));}
+                        resultSet.getString("createdAt"), resultSet.getInt("visitNumber"), resultSet.getInt("categoryId"), resultSet.getInt("userId")));
+            }
+
+            // Provera da li postoji sledeći page
+            if (allNews.isEmpty() && page > 1) {
+                int previousPage = page - 1;
+                return getAllNews(previousPage);
+            }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -84,6 +96,7 @@ public class MySqlNewsRepository extends MySqlAbstractRepository implements News
 
         return allNews;
     }
+
 
     @Override
     public News findNewsById(int id) {

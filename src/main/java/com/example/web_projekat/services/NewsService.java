@@ -16,8 +16,8 @@ public class NewsService {
         return newsRepository.createNews(userId, newsDto);
     }
 
-    public List<News> getAllNews(){
-        return newsRepository.getAllNews();
+    public List<News> getAllNews(int page){
+        return newsRepository.getAllNews(page);
     }
 
     public News findNewsById(int id){

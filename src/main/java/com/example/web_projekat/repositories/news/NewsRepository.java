@@ -9,7 +9,7 @@ public interface NewsRepository {
 
     News createNews(int userId, NewsDto newsDto);
 
-    List<News> getAllNews();
+    List<News> getAllNews(int page);
 
     News findNewsById(int id);
 

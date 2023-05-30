@@ -17,16 +17,16 @@ public class CategoryService {
         return categoryRepository.createCategory(categoryDto);
     }
 
-    public List<Category> getAllCategory(){
-        return categoryRepository.getAllCategory();
+    public List<Category> getAllCategory(int page){
+        return categoryRepository.getAllCategory(page);
     }
 
     public Category findCategoryById(int id){
         return categoryRepository.findCategoryById(id);
     }
 
-    public List<News> getNewsByCategoryId(int id) {
-       return categoryRepository.getNewsByCategoryId(id);
+    public List<News> getNewsByCategoryId(int id, int page) {
+       return categoryRepository.getNewsByCategoryId(id, page);
     }
 
     public Category updateCategory(int id, CategoryDto categoryDto){

@@ -53,20 +53,32 @@ public class MySqlCategoryRepository extends MySqlAbstractRepository implements 
     }
 
     @Override
-    public List<Category> getAllCategory() {
+    public List<Category> getAllCategory(int page) {
         List<Category> allCategories = new ArrayList<>();
 
         Connection connection = null;
-        Statement statement = null;
+        PreparedStatement statement = null;
         ResultSet resultSet = null;
+
+        int itemsPerPage = 10;
+        int startIndex = (page - 1) * itemsPerPage;
 
         try {
             connection = this.newConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery("select * from categories");
+
+            statement = connection.prepareStatement("SELECT * FROM categories LIMIT ?, ?");
+            statement.setInt(1, startIndex);
+            statement.setInt(2, itemsPerPage);
+            resultSet = statement.executeQuery();
 
             while (resultSet.next()){
                 allCategories.add(new Category(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("description")));
+            }
+
+            // Provera da li postoji sledeći page
+            if(allCategories.isEmpty() && page > 1){
+                int previousPage = page - 1;
+                return getAllCategory(previousPage);
             }
 
         } catch (SQLException e) {
@@ -114,18 +126,23 @@ public class MySqlCategoryRepository extends MySqlAbstractRepository implements 
     }
 
     @Override
-    public List<News> getNewsByCategoryId(int id) {
+    public List<News> getNewsByCategoryId(int id, int page) {
         List<News> allNews = new ArrayList<>();
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
+        int itemsPerPage = 10;
+        int startIndex = (page - 1) * itemsPerPage;
+
         try {
             connection = this.newConnection();
 
-            preparedStatement = connection.prepareStatement("SELECT * FROM news where categoryId = ?");
+            preparedStatement = connection.prepareStatement("SELECT * FROM news WHERE categoryId = ? LIMIT ?, ?");
             preparedStatement.setInt(1, id);
+            preparedStatement.setInt(2, startIndex);
+            preparedStatement.setInt(3, itemsPerPage);
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()){
@@ -133,9 +150,17 @@ public class MySqlCategoryRepository extends MySqlAbstractRepository implements 
                         resultSet.getString("createdAt"), resultSet.getInt("visitNumber"), resultSet.getInt("categoryId"), resultSet.getInt("userId")));
             }
 
+            // Provera da li postoji sledeći page
+            if (allNews.isEmpty() && page > 1) {
+                int previousPage = page - 1;
+                return getNewsByCategoryId(id ,previousPage);
+            }
+
             resultSet.close();
             preparedStatement.close();
             connection.close();
+
+
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

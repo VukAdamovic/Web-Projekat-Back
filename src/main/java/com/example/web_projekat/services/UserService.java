@@ -22,8 +22,8 @@ public class UserService {
         return userRepository.createUser(userCreateDto);
     }
 
-    public List<User> getAllUser(){
-        return userRepository.getAllUser();
+    public List<User> getAllUser(int page){
+        return userRepository.getAllUser(page);
     }
 
     public User findUserById(int id){

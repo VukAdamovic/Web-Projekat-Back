@@ -10,7 +10,7 @@ public interface UserRepository {
 
     User createUser(UserCreateDto userCreateDto);
 
-    List<User> getAllUser();
+    List<User> getAllUser(int page);
 
     User findUserById(int id);
 
