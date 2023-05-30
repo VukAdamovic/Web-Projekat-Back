@@ -180,6 +180,12 @@ public class MySqlNewsRepository extends MySqlAbstractRepository implements News
         try {
             connection = this.newConnection();
 
+            preparedStatement = connection.prepareStatement("DELETE FROM comments where newsId = ?");
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+
+
             preparedStatement = connection.prepareStatement("DELETE FROM news where id = ?");
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
