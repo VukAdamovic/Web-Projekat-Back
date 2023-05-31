@@ -174,8 +174,16 @@ public class MySqlUserRepository extends MySqlAbstractRepository implements User
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
+
         try {
             connection = this.newConnection();
+
+            if(userUpdateDto.getRoleId() == 1){
+                preparedStatement = connection.prepareStatement("UPDATE raf_users SET status = ? WHERE id = ?");
+                preparedStatement.setBoolean(1, true);
+                preparedStatement.setInt(2, id);
+                preparedStatement.executeUpdate();
+            }
 
             preparedStatement = connection.prepareStatement("UPDATE raf_users SET firstName = ?, lastName = ?, email = ?, roleId = ? WHERE id = ?");
             preparedStatement.setString(1, userUpdateDto.getFirstName());
@@ -211,7 +219,10 @@ public class MySqlUserRepository extends MySqlAbstractRepository implements User
     @Override
     public User changeActivation(int id) {
         User user = findUserById(id);
-        user.setStatus(!user.getStatus());
+
+        if(user.getRoleId() != 1) {
+            user.setStatus(!user.getStatus());
+        }
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
