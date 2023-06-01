@@ -21,6 +21,10 @@ public class CategoryService {
         return categoryRepository.getAllCategory(page);
     }
 
+    public List<Category> getAllCategory(){
+        return categoryRepository.getAllCategory();
+    }
+
     public Category findCategoryById(int id){
         return categoryRepository.findCategoryById(id);
     }

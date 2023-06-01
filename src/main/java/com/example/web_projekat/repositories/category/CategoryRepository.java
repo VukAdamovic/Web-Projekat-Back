@@ -12,6 +12,8 @@ public interface CategoryRepository {
 
     List<Category> getAllCategory(int page);
 
+    List<Category> getAllCategory();
+
     Category findCategoryById(int id);
 
 

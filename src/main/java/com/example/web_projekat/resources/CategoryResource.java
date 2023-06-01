@@ -43,6 +43,12 @@ public class CategoryResource {
         return Response.ok(categoryService.getAllCategory(page)).build();
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findAllCategories() {
+        return Response.ok(categoryService.getAllCategory()).build();
+    }
+
     @PUT
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)

@@ -93,6 +93,36 @@ public class MySqlCategoryRepository extends MySqlAbstractRepository implements 
     }
 
     @Override
+    public List<Category> getAllCategory() {
+        List<Category> allCategories = new ArrayList<>();
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = this.newConnection();
+
+            statement = connection.prepareStatement("SELECT * FROM categories");
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()){
+                allCategories.add(new Category(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("description")));
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            this.closeStatement(statement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return allCategories;
+    }
+
+    @Override
     public Category findCategoryById(int id) {
         Category category = null;
 
