@@ -68,6 +68,10 @@ public class AuthFilter implements ContainerRequestFilter {
 
     private boolean isAdminMethods(ContainerRequestContext req){
         List<Object> matchedResources = req.getUriInfo().getMatchedResources();
+        if (req.getUriInfo().getPath().contains("getUser")) {
+            return false;
+        }
+
         for (Object matchedResource : matchedResources) {
             if ((matchedResource instanceof UserResource || matchedResource instanceof RoleResource)) {
                 return true;

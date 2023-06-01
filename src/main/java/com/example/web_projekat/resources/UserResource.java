@@ -43,7 +43,7 @@ public class UserResource {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/getUser/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findUserById(@PathParam("id") int id) {
         return Response.ok(userService.findUserById(id)).build();
