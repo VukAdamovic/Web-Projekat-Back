@@ -73,7 +73,7 @@ public class MySqlNewsRepository extends MySqlAbstractRepository implements News
 
         try {
             connection = this.newConnection();
-            statement = connection.prepareStatement("SELECT * FROM news LIMIT ?, ?");
+            statement = connection.prepareStatement("SELECT * FROM news ORDER BY createdAt DESC LIMIT ?, ?");
             statement.setInt(1, startIndex);
             statement.setInt(2, itemsPerPage);
             resultSet = statement.executeQuery();
