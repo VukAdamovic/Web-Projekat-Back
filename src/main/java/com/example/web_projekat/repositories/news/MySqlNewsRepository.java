@@ -5,14 +5,14 @@ import com.example.web_projekat.repositories.MySqlAbstractRepository;
 import com.example.web_projekat.repositories.dto.news.NewsDto;
 
 import java.sql.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MySqlNewsRepository extends MySqlAbstractRepository implements NewsRepository {
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy H:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy H:mm:ss");
 
     @Override
     public News createNews(int userId, NewsDto newsDto) {
@@ -20,7 +20,10 @@ public class MySqlNewsRepository extends MySqlAbstractRepository implements News
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        News news = new News(newsDto.getTitle(),newsDto.getContent(), LocalDate.now().format(DATE_FORMATTER),
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        String formattedDateTime = currentDateTime.format(DATE_TIME_FORMATTER);
+
+        News news = new News(newsDto.getTitle(), newsDto.getContent(), formattedDateTime,
                 0, newsDto.getCategoryId(), userId);
 
         try{
@@ -194,6 +197,11 @@ public class MySqlNewsRepository extends MySqlAbstractRepository implements News
             connection = this.newConnection();
 
             preparedStatement = connection.prepareStatement("DELETE FROM comments where newsId = ?");
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+
+            preparedStatement = connection.prepareStatement("DELETE FROM news_tags where newsId = ?");
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
             preparedStatement.close();

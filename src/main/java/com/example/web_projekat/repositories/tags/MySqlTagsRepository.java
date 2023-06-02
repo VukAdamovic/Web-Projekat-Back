@@ -159,6 +159,11 @@ public class MySqlTagsRepository extends MySqlAbstractRepository implements Tags
         try {
             connection = this.newConnection();
 
+            preparedStatement = connection.prepareStatement("DELETE FROM news_tags where tagsId = ?");
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+
             preparedStatement = connection.prepareStatement("DELETE FROM tags where id = ?");
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
