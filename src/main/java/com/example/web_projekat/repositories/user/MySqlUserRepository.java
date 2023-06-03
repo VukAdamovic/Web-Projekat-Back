@@ -80,12 +80,6 @@ public class MySqlUserRepository extends MySqlAbstractRepository implements User
                 allUsers.add(new User(resultSet.getInt("id"), resultSet.getString("email"), resultSet.getString("firstName"), resultSet.getString("lastName"), resultSet.getInt("roleId"), resultSet.getBoolean("status"), resultSet.getString("hashedPassword")));
             }
 
-            // Provera da li postoji sledeći page
-            if (allUsers.isEmpty() && page > 1) {
-                int previousPage = page - 1;
-                return getAllUser(previousPage);
-            }
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

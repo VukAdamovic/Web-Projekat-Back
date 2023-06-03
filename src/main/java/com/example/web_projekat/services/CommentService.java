@@ -16,8 +16,8 @@ public class CommentService {
         return commentRepository.createComment(commentDto);
     }
 
-    public List<Comment> getAllComments(int page){
-        return commentRepository.getAllComments(page);
+    public List<Comment> getAllComments(int page, int newsId){
+        return commentRepository.getAllComments(page, newsId);
     }
 
     public Comment findCommentById(int id){

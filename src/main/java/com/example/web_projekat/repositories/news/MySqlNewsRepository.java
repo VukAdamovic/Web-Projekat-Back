@@ -83,12 +83,6 @@ public class MySqlNewsRepository extends MySqlAbstractRepository implements News
                         resultSet.getString("createdAt"), resultSet.getInt("visitNumber"), resultSet.getInt("categoryId"), resultSet.getInt("userId")));
             }
 
-            // Provera da li postoji sledeći page
-            if (allNews.isEmpty() && page > 1) {
-                int previousPage = page - 1;
-                return getAllNews(previousPage);
-            }
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

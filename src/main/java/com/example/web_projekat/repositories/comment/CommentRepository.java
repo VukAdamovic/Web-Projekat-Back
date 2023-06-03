@@ -9,7 +9,7 @@ public interface CommentRepository {
 
     Comment createComment(CommentDto commentDto);
 
-    List<Comment> getAllComments(int page);
+    List<Comment> getAllComments(int page, int newsId);
 
     Comment findCommentById(int id);
 

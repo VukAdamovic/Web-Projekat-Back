@@ -30,10 +30,10 @@ public class CommentResource {
     }
 
     @GET
-    @Path("/page/{pageNumber}")
+    @Path("/{newsId}/page/{pageNumber}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findAllComments(@PathParam("pageNumber") int page) {
-        return Response.ok(commentService.getAllComments(page)).build();
+    public Response findAllComments(@PathParam("pageNumber") int page, @PathParam("newsId") int newsId) {
+        return Response.ok(commentService.getAllComments(page, newsId)).build();
     }
 
     @DELETE

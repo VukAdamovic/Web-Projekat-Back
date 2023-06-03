@@ -7,13 +7,14 @@ import com.example.web_projekat.repositories.dto.comment.CommentDto;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MySqlCommentRepository extends MySqlAbstractRepository implements CommentRepository {
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy H:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy H:mm:ss");
 
 
     @Override
@@ -22,7 +23,10 @@ public class MySqlCommentRepository extends MySqlAbstractRepository implements C
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        Comment comment = new Comment(commentDto.getName(), commentDto.getContent(), LocalDate.now().format(DATE_FORMATTER), commentDto.getNewsId());
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        String formattedDateTime = currentDateTime.format(DATE_TIME_FORMATTER);
+
+        Comment comment = new Comment(commentDto.getName(), commentDto.getContent(), formattedDateTime, commentDto.getNewsId());
 
         try{
             connection = this.newConnection();
@@ -58,7 +62,7 @@ public class MySqlCommentRepository extends MySqlAbstractRepository implements C
     }
 
     @Override
-    public List<Comment> getAllComments(int page) {
+    public List<Comment> getAllComments(int page, int newsId) {
         List<Comment> allComments = new ArrayList<>();
 
         Connection connection = null;
@@ -70,20 +74,16 @@ public class MySqlCommentRepository extends MySqlAbstractRepository implements C
 
         try {
             connection = this.newConnection();
-            statement = connection.prepareStatement("SELECT * FROM comments LIMIT ?, ?");
-            statement.setInt(1, startIndex);
-            statement.setInt(2, itemsPerPage);
+            statement = connection.prepareStatement("SELECT * FROM comments WHERE newsId = ? ORDER BY createdAt DESC LIMIT ?, ?");
+            statement.setInt(1, newsId);
+            statement.setInt(2, startIndex);
+            statement.setInt(3, itemsPerPage);
             resultSet = statement.executeQuery();
 
             while (resultSet.next()){
                 allComments.add(new Comment(resultSet.getInt("id"), resultSet.getString("name"),resultSet.getString("content"), resultSet.getString("createdAt"), resultSet.getInt("newsId")));
             }
 
-            // Provera da li postoji sledeći page
-            if (allComments.isEmpty() && page > 1) {
-                int previousPage = page - 1;
-                return getAllComments(previousPage);
-            }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
