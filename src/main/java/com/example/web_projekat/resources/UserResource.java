@@ -66,7 +66,7 @@ public class UserResource {
     @PUT
     @Path("/status/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changeActivation(@PathParam("id") int id, @Valid UserUpdateDto userUpdateDto){
+    public Response changeActivation(@PathParam("id") int id){
         return Response.ok(userService.changeActivation(id)).build();
     }
 

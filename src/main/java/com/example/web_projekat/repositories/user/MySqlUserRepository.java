@@ -222,39 +222,41 @@ public class MySqlUserRepository extends MySqlAbstractRepository implements User
 
         if(user.getRoleId() != 1) {
             user.setStatus(!user.getStatus());
-        }
 
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+            Connection connection = null;
+            PreparedStatement preparedStatement = null;
+            ResultSet resultSet = null;
 
-        try {
-            connection = this.newConnection();
+            try {
+                connection = this.newConnection();
 
-            preparedStatement = connection.prepareStatement("UPDATE raf_users SET status = ? WHERE id = ?");
-            preparedStatement.setBoolean(1, user.getStatus());
-            preparedStatement.setInt(2, id);
+                preparedStatement = connection.prepareStatement("UPDATE raf_users SET status = ? WHERE id = ?");
+                preparedStatement.setBoolean(1, user.getStatus());
+                preparedStatement.setInt(2, id);
 
-            int rowsAffected = preparedStatement.executeUpdate();
+                int rowsAffected = preparedStatement.executeUpdate();
 
-            if (rowsAffected > 0) {
-                String selectQuery = "SELECT id, email, firstName, lastName, roleId, status, hashedPassword FROM raf_users WHERE id = ?";
-                preparedStatement = connection.prepareStatement(selectQuery);
-                preparedStatement.setInt(1, id);
-                resultSet = preparedStatement.executeQuery();
+                if (rowsAffected > 0) {
+                    String selectQuery = "SELECT id, email, firstName, lastName, roleId, status, hashedPassword FROM raf_users WHERE id = ?";
+                    preparedStatement = connection.prepareStatement(selectQuery);
+                    preparedStatement.setInt(1, id);
+                    resultSet = preparedStatement.executeQuery();
 
-                if (resultSet.next()) {
-                    user = new User(resultSet.getInt("id"), resultSet.getString("email"), resultSet.getString("firstName"), resultSet.getString("lastName"), resultSet.getInt("roleId"), resultSet.getBoolean("status"), resultSet.getString("hashedPassword"));
+                    if (resultSet.next()) {
+                        user = new User(resultSet.getInt("id"), resultSet.getString("email"), resultSet.getString("firstName"), resultSet.getString("lastName"), resultSet.getInt("roleId"), resultSet.getBoolean("status"), resultSet.getString("hashedPassword"));
+                    }
                 }
-            }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            this.closeResultSet(resultSet);
-            this.closeStatement(preparedStatement);
-            this.closeConnection(connection);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                this.closeResultSet(resultSet);
+                this.closeStatement(preparedStatement);
+                this.closeConnection(connection);
+            }
         }
+
+
 
         return user;
 
