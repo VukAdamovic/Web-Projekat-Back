@@ -1,5 +1,6 @@
 package com.example.web_projekat.services;
 
+import com.example.web_projekat.entities.News;
 import com.example.web_projekat.entities.Tags;
 import com.example.web_projekat.repositories.dto.tags.TagsDto;
 import com.example.web_projekat.repositories.tags.TagsRepository;
@@ -26,6 +27,10 @@ public class TagsService {
 
     public Tags updateTag(int id, TagsDto tagsDto){
         return tagsRepository.updateTag(id, tagsDto);
+    }
+
+    public List<News> filterByTag(int tagId, int page){
+        return tagsRepository.filterByTag(tagId,page);
     }
 
     public void deleteTagById(int id){

@@ -30,6 +30,13 @@ public class TagsResource {
     }
 
     @GET
+    @Path("/{id}/{page}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response filterNewsByTag(@PathParam("id") int id, @PathParam("page") int page) {
+        return Response.ok(tagsService.filterByTag(id,page)).build();
+    }
+
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response findAllTags() {
         return Response.ok(tagsService.getAllTags()).build();

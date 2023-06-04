@@ -180,11 +180,6 @@ public class MySqlCategoryRepository extends MySqlAbstractRepository implements 
                         resultSet.getString("createdAt"), resultSet.getInt("visitNumber"), resultSet.getInt("categoryId"), resultSet.getInt("userId")));
             }
 
-            // Provera da li postoji sledeći page
-            if (allNews.isEmpty() && page > 1) {
-                int previousPage = page - 1;
-                return getNewsByCategoryId(id ,previousPage);
-            }
 
             resultSet.close();
             preparedStatement.close();

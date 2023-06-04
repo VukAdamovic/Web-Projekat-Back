@@ -1,12 +1,16 @@
 package com.example.web_projekat.repositories.tags;
 
+import com.example.web_projekat.entities.News;
+import com.example.web_projekat.entities.NewsTags;
 import com.example.web_projekat.entities.Tags;
 import com.example.web_projekat.repositories.MySqlAbstractRepository;
 import com.example.web_projekat.repositories.dto.tags.TagsDto;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MySqlTagsRepository extends MySqlAbstractRepository implements TagsRepository {
 
@@ -150,6 +154,55 @@ public class MySqlTagsRepository extends MySqlAbstractRepository implements Tags
 
         return tag;
     }
+
+    @Override
+    public List<News> filterByTag(int tagId, int page) {
+        List<News> allNews = new ArrayList<>();
+        List<NewsTags> newsId = new ArrayList<>();
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        int itemsPerPage = 10;
+        int startIndex = (page - 1) * itemsPerPage;
+
+        try {
+            connection = this.newConnection();
+
+            preparedStatement = connection.prepareStatement("SELECT * FROM news_tags WHERE tagsId = ?");
+            preparedStatement.setInt(1, tagId);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                newsId.add(new NewsTags(resultSet.getInt("newsId"), resultSet.getInt("tagsId")));
+            }
+
+            // Promenite petlju za dobavljanje vesti kako biste ograničili broj vesti na strani
+            for (int i = startIndex; i < Math.min(startIndex + itemsPerPage, newsId.size()); i++) {
+                NewsTags newsTags = newsId.get(i);
+
+                preparedStatement = connection.prepareStatement("SELECT * FROM news WHERE id = ?");
+                preparedStatement.setInt(1, newsTags.getNewsId());
+                resultSet = preparedStatement.executeQuery();
+
+                while (resultSet.next()) {
+                    allNews.add(new News(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getString("content"),
+                            resultSet.getString("createdAt"), resultSet.getInt("visitNumber"), resultSet.getInt("categoryId"), resultSet.getInt("userId")));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Oslobađanje resursa
+            closeResultSet(resultSet);
+            closeStatement(preparedStatement);
+            closeConnection(connection);
+        }
+
+        return allNews;
+    }
+
 
     @Override
     public void deleteTagById(int id) {

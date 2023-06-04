@@ -1,5 +1,6 @@
 package com.example.web_projekat.repositories.tags;
 
+import com.example.web_projekat.entities.News;
 import com.example.web_projekat.entities.Tags;
 import com.example.web_projekat.repositories.dto.tags.TagsDto;
 
@@ -14,6 +15,8 @@ public interface TagsRepository {
     Tags findTagById(int id);
 
     Tags updateTag(int id, TagsDto tagsDto);
+
+    List<News> filterByTag(int tagId, int page);
 
     void deleteTagById(int id);
 
