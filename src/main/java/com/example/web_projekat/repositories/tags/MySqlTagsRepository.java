@@ -178,7 +178,6 @@ public class MySqlTagsRepository extends MySqlAbstractRepository implements Tags
                 newsId.add(new NewsTags(resultSet.getInt("newsId"), resultSet.getInt("tagsId")));
             }
 
-            // Promenite petlju za dobavljanje vesti kako biste ograničili broj vesti na strani
             for (int i = startIndex; i < Math.min(startIndex + itemsPerPage, newsId.size()); i++) {
                 NewsTags newsTags = newsId.get(i);
 
