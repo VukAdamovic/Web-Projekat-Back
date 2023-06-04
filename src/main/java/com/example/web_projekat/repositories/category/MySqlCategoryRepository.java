@@ -169,7 +169,7 @@ public class MySqlCategoryRepository extends MySqlAbstractRepository implements 
         try {
             connection = this.newConnection();
 
-            preparedStatement = connection.prepareStatement("SELECT * FROM news WHERE categoryId = ? LIMIT ?, ?");
+            preparedStatement = connection.prepareStatement("SELECT * FROM news WHERE categoryId = ? ORDER BY createdAt DESC LIMIT ?, ?");
             preparedStatement.setInt(1, id);
             preparedStatement.setInt(2, startIndex);
             preparedStatement.setInt(3, itemsPerPage);
