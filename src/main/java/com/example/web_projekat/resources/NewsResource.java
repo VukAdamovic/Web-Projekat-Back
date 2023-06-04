@@ -37,6 +37,13 @@ public class NewsResource {
         return Response.ok(newsService.getAllNews(page)).build();
     }
 
+    @GET
+    @Path("/topStories")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response topStories() {
+        return Response.ok(newsService.getTopStories()).build();
+    }
+
     @PUT
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)

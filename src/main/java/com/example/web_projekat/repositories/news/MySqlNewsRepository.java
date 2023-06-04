@@ -8,6 +8,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MySqlNewsRepository extends MySqlAbstractRepository implements NewsRepository {
@@ -180,6 +181,40 @@ public class MySqlNewsRepository extends MySqlAbstractRepository implements News
         }
 
         return news;
+    }
+
+    @Override
+    public List<News> getTopStories() {
+        List<News> topStories = new ArrayList<>();
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = this.newConnection();
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH, -30);
+            Timestamp thirtyDaysAgo = new Timestamp(calendar.getTimeInMillis());
+
+            statement = connection.prepareStatement("SELECT * FROM news WHERE createdAt >= ? ORDER BY visitNumber DESC LIMIT 10");
+            statement.setTimestamp(1, thirtyDaysAgo);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                topStories.add(new News(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getString("content"),
+                        resultSet.getString("createdAt"), resultSet.getInt("visitNumber"), resultSet.getInt("categoryId"), resultSet.getInt("userId")));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            this.closeStatement(statement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return topStories;
     }
 
     @Override

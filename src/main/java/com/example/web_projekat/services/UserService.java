@@ -57,6 +57,8 @@ public class UserService {
                 .withSubject(user.getEmail())
                 .withClaim("id",user.getId())
                 .withClaim("roleId",user.getRoleId())
+                .withClaim("firstName",user.getFirstName())
+                .withClaim("lastName",user.getLastName())
                 .sign(algorithm);
     }
 

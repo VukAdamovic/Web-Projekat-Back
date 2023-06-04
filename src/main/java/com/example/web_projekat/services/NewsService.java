@@ -28,6 +28,10 @@ public class NewsService {
         return newsRepository.updateNews(id,newsDto);
     }
 
+    public List<News> getTopStories(){
+        return newsRepository.getTopStories();
+    }
+
     public void deleteNewsById(int id){
         newsRepository.deleteNewsById(id);
     }

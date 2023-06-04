@@ -15,5 +15,7 @@ public interface NewsRepository {
 
     News updateNews(int id, NewsDto newsDto);
 
+    List<News> getTopStories();
+
     void deleteNewsById(int id);
 }
